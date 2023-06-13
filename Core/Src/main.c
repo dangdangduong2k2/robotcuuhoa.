@@ -9,7 +9,7 @@
 #include "fonts.h"
 
 
-#define ADD_acc 0x0800FC00
+#define ADD_acc 0x0800EC00
 #define ADD_vel 0x0800F800
 #define ADD_pos 0x0800F400
 #define ADD_tim 0x0800F000
@@ -181,7 +181,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
           {
               DC_Servo_Driver_UART_MSD_Moving_Start();
               setup();
-              robotShootingFightRun(100,120,1000);
+              robotShootingFightRun(100,400,1000);
               run=0;
               crun=0;
               accept_to_deacc=1;
@@ -189,8 +189,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
           }
           if(crun==1)
           {
-              robotShootingFightRun(100,88,0);
+              robotShootingFightRun(100,60,0);
               accept_to_deacc=0;
+              crun=99;
             
           }
           if(HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_11)==1 && crun==0)
@@ -223,7 +224,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       }
       if(ticktim3==timemoter)
       {
-        HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,0);
+       HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,0);
         
         ticktim3=0;
         tickmoter=0;
