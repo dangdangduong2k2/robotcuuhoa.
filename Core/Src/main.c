@@ -184,7 +184,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
           {
               DC_Servo_Driver_UART_MSD_Moving_Start();
               setup();
-              robotShootingFightRun(100,120,1000);
+              robotShootingFightRun(100,400,1000);
               run=0;
               crun=0;
               accept_to_deacc=1;
@@ -192,9 +192,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
           }
           if(crun==1)
           {
-              robotShootingFightRun(100,88,0);
+              robotShootingFightRun(100,80,0);
               accept_to_deacc=0;
-            
+              crun=99;
           }
           if(HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_11)==1 && crun==0)
           {    
@@ -202,7 +202,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
               tickmoter=1;
               crun=99;
               DC_Servo_Driver_UART_MSD_Moving_Stop();
-              
           }
       }
       
@@ -257,7 +256,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     }
   }
 }
-
 
 
 void robotShootingFightRun(int32_t Acceleration,
