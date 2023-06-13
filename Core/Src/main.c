@@ -28,7 +28,8 @@ int vel=50;
 
 int8_t pos=10;
 
-uint8_t count_to_deacc=0;;
+uint8_t count_to_deacc=0;
+uint8_t count_to_back=0;
 uint8_t accept_to_deacc=0;
 
 uint8_t buffer_acc[30];
@@ -50,7 +51,9 @@ uint8_t state3=0;
 uint8_t state_run=0;
 uint8_t run=0;
 uint8_t crun=0;
+uint8_t back=0;
 uint8_t state_to_deacc=0;
+uint8_t state_to_back=0;
 
 uint8_t color_acc=0;
 uint8_t color_vel=1;
@@ -202,18 +205,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
               
           }
       }
-      else
-      {
-          if(HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_1)==0 && state_to_deacc==0)
-          {    
-              count_to_deacc++;  
-              state_to_deacc=1;
-          } 
-          if(HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_1)==1)
-          {    
-              state_to_deacc=0;
-          } 
-      }
+      
   }
   else if (htim->Instance == TIM3) 
   {
@@ -228,6 +220,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         ticktim3=0;
         tickmoter=0;
         crun=1;
+        back=1;
       }    
       if(count_to_deacc==pos && accept_to_deacc==1)
       {
@@ -239,6 +232,29 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   else if (htim->Instance == TIM4) 
   {
     
+    if(HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_1)==0 && state_to_deacc==0)
+    {    
+        count_to_deacc++;  
+        state_to_deacc=1;
+    } 
+    if(HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_1)==1)
+    {    
+        state_to_deacc=0;
+    } 
+    if(HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_1)==0 && back==1 && state_to_back==0)
+    {
+        count_to_back++;
+        state_to_back=1;
+    }
+    if(HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_1)==1)
+    {    
+        state_to_back=0;
+    }
+    if(count_to_back==18)
+    {
+        DC_Servo_Driver_UART_MSD_Moving_Stop();
+        back=0;
+    }
   }
 }
 
